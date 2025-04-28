@@ -3,13 +3,12 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-} from "@nestjs/common";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface Response<T> {
   data: T;
-  meta?: any;
 }
 
 @Injectable()
@@ -18,22 +17,29 @@ export class TransformInterceptor<T>
 {
   intercept(
     context: ExecutionContext,
-    next: CallHandler
+    next: CallHandler,
   ): Observable<Response<T>> {
     return next.handle().pipe(
-      map((data) => {
-        // Handle pagination responses or standard responses
-        if (data && data.items && data.meta) {
+      map((value) => {
+        if (!value) {
           return {
-            data: data.items,
-            meta: data.meta,
+            success: true,
+            data: null,
+          };
+        }
+
+        if (value.data) {
+          return {
+            success: true,
+            ...value,
           };
         }
 
         return {
-          data,
+          success: true,
+          data: value,
         };
-      })
+      }),
     );
   }
 }
