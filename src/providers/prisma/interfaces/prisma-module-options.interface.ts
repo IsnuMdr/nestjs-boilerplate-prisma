@@ -31,20 +31,17 @@ export interface PrismaServiceOptions {
    *
    * See: https://www.prisma.io/docs/concepts/components/prisma-client/middleware
    */
-  middlewares?: Array<Prisma.Middleware>;
+  middlewares?: Array<any>;
 }
 
 export interface PrismaOptionsFactory {
   createPrismaOptions(): Promise<PrismaServiceOptions> | PrismaServiceOptions;
 }
 
-export interface PrismaModuleAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface PrismaModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
   isGlobal?: boolean;
   useExisting?: Type<PrismaOptionsFactory>;
   useClass?: Type<PrismaOptionsFactory>;
-  useFactory?: (
-    ...args: any[]
-  ) => Promise<PrismaServiceOptions> | PrismaServiceOptions;
+  useFactory?: (...args: any[]) => Promise<PrismaServiceOptions> | PrismaServiceOptions;
   inject?: any[];
 }

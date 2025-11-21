@@ -23,19 +23,26 @@ export class ResponseInterceptor implements NestInterceptor {
       'Request successful';
 
     return next.handle().pipe(
-      map((data) => ({
-        status: true,
-        message: responseMessage,
-        data: data?.data ?? data,
-        ...(data?.data && data?.meta
-          ? {
-              total: data.meta.total,
-              last_page: data.meta.lastPage,
-              currentPage: data.meta.currentPage,
-              perPage: data.meta.perPage,
-            }
-          : {}),
-      })),
+      map((data) => {
+        const response = {
+          status: true,
+          message: responseMessage,
+          data: data,
+        };
+
+        if (data?.data && data?.meta) {
+          response.data = data.data;
+          return {
+            ...response,
+            total: data.meta.total,
+            last_page: data.meta.lastPage,
+            currentPage: data.meta.currentPage,
+            perPage: data.meta.perPage,
+          };
+        }
+
+        return response;
+      }),
     );
   }
 }

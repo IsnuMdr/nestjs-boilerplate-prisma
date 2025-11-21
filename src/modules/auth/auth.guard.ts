@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { TokenService } from './token.service';
 import { AuthService } from '@modules/auth/auth.service';
 import { Reflector } from '@nestjs/core';
 import { IS_SKIP_AUTH_KEY } from '@modules/auth/skip-auth.guard';
@@ -17,7 +16,6 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly tokenService: TokenService,
     private readonly authService: AuthService,
     private reflector: Reflector,
   ) {}
@@ -50,10 +48,6 @@ export class AuthGuard implements CanActivate {
       }
 
       if (tokenData.type == 'Bearer') {
-        await this.tokenService.getAccessTokenFromWhitelist(tokenData.token);
-
-        // 💡 We're assigning the payload to the request object here
-        // so that we can access it in our route handlers
         request['user'] = await this.jwtService.verifyAsync(tokenData.token, {
           secret: this.configService.get<string>('jwt.accessToken'),
         });
@@ -61,7 +55,8 @@ export class AuthGuard implements CanActivate {
           accessToken: tokenData.token,
         };
       }
-    } catch {
+    } catch (error) {
+      console.error('Auth guard error:', error.message);
       throw new UnauthorizedException();
     }
 

@@ -10,15 +10,12 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { PRISMA_SERVICE_OPTIONS } from './prisma.constant';
 import { PrismaServiceOptions } from './interfaces';
 
-
 @Injectable()
 export class PrismaService
-  extends PrismaClient<
-    Prisma.PrismaClientOptions,
-    'query' | 'info' | 'warn' | 'error'
-  >
+  extends PrismaClient<Prisma.PrismaClientOptions, 'query' | 'info' | 'warn' | 'error'>
   implements OnModuleInit
 {
+  [x: string]: any;
   constructor(
     @Optional()
     @Inject(PRISMA_SERVICE_OPTIONS)
@@ -26,9 +23,11 @@ export class PrismaService
   ) {
     super(prismaServiceOptions.prismaOptions);
 
-    if (this.prismaServiceOptions.middlewares) {
-      this.prismaServiceOptions.middlewares.forEach((middleware) =>
-        this.$use(middleware),
+    if (this.prismaServiceOptions.middlewares && typeof this.$use === 'function') {
+      this.prismaServiceOptions.middlewares.forEach(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        (middleware) => this.$use(middleware),
       );
     }
   }

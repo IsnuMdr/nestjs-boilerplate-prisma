@@ -23,7 +23,7 @@ A modern, production-ready boilerplate for building scalable NestJS applications
 - **Response Decorators** - Custom decorators for standardized API responses
 - **Health Checks** - Endpoint monitoring with @nestjs/terminus
 - **AWS S3 Integration** - File storage capabilities
-- **Pagination** - Efficient data pagination with @nodeteam/nestjs-prisma-pagination
+- **Pagination** - Efficient data pagination with built-in Prisma and custom pagination service
 
 ## Project Structure
 

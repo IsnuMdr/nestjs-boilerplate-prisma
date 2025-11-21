@@ -24,6 +24,7 @@ export const NO_EMAILS = '400006: User has no email attached to it';
 export const USER_CANT_BE_GUARDIAN = "400027: User can't be guardian";
 
 export const USER_CONFLICT = '409001: User with this email or phone already exists';
+export const USER_EXISTS = '409002: User with this email already exists';
 export const USER_VERIFIED_CONFLICT = '409018: User is already verified';
 export const USER_WITHOUT_PASSWORD = '409019: User does not have a password';
 export const USER_ALREADY_HAVE_PASSWORD = '409020: User already has a password';

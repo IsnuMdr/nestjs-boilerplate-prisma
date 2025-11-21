@@ -5,16 +5,15 @@ import swaggerConfig from '@config/swagger.config';
 import { LoggingInterceptor } from '@common/interceptors/logging.interceptor';
 import { AuthGuard } from '@modules/auth/auth.guard';
 import { AuthModule } from '@modules/auth/auth.module';
-import { TokenRepository } from '@modules/auth/token.repository';
-import { TokenService } from '@modules/auth/token.service';
-import { CaslModule } from '@modules/casl';
 import HealthModule from '@modules/health/health.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PrismaModule } from '@providers/prisma';
-import { RedisModule } from '@providers/redis';
+import { PaginationModule } from '@providers/pagination';
+import { UserModule } from '@modules/user/user.module';
+
 
 @Module({
   controllers: [],
@@ -26,21 +25,16 @@ import { RedisModule } from '@providers/redis';
     PrismaModule.forRoot({
       isGlobal: true,
     }),
-    RedisModule,
+    PaginationModule,
+    // RedisModule,
     JwtModule.register({
       global: true,
     }),
-    // CaslModule.forRoot<Roles>({
-    //   // Role to grant full access, optional
-    //   superuserRole: Roles.superadmin,
-    // }),
     HealthModule,
     AuthModule,
+    UserModule,
   ],
   providers: [
-    TokenService,
-    JwtService,
-    TokenRepository,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
@@ -52,3 +46,5 @@ import { RedisModule } from '@providers/redis';
   ],
 })
 export class AppModule {}
+
+
